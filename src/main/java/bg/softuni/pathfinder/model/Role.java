@@ -1,6 +1,6 @@
 package bg.softuni.pathfinder.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import bg.softuni.pathfinder.model.enums.UserRoles;
 import jakarta.persistence.*;
 
 @Entity
