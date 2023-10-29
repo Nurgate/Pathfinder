@@ -5,19 +5,18 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "roles")
-
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private Long  id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRoles name;
 
     public Role() {
+
     }
 
     public Long getId() {
@@ -36,5 +35,3 @@ public class Role {
         this.name = name;
     }
 }
-
-

@@ -1,20 +1,19 @@
 package bg.softuni.pathfinder.model;
 
+
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
-
 public class Message {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "date_time")
-    private LocalDateTime datetime;
+    private LocalDateTime dateTime;
 
     @Column(name = "text_content", nullable = false)
     private String textContent;
@@ -26,6 +25,7 @@ public class Message {
     private User recipient;
 
     public Message() {
+
     }
 
     public Long getId() {
@@ -36,12 +36,12 @@ public class Message {
         this.id = id;
     }
 
-    public LocalDateTime getDatetime() {
-        return datetime;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDatetime(LocalDateTime datetime) {
-        this.datetime = datetime;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getTextContent() {

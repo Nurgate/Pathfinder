@@ -1,8 +1,11 @@
 package bg.softuni.pathfinder.service;
 
-import bg.softuni.pathfinder.model.User;
+import bg.softuni.pathfinder.model.dto.view.UserProfileViewModel;
 
 public interface UserService {
+    boolean isUniqueUsername(String value);
 
-    User getLoggedUser();
+    boolean isUniqueEmail(String value);
+
+    UserProfileViewModel getUserProfile();
 }

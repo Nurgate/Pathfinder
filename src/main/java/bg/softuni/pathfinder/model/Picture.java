@@ -1,11 +1,9 @@
 package bg.softuni.pathfinder.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Mutability;
 
 @Entity
 @Table(name = "pictures")
-
 public class Picture {
 
     @Id
@@ -25,6 +23,7 @@ public class Picture {
     private Route route;
 
     public Picture() {
+
     }
 
     public Long getId() {

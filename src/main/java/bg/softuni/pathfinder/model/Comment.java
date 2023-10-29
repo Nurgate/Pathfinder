@@ -16,7 +16,7 @@ public class Comment {
     private Boolean approved;
 
     @Column(name = "created")
-    private LocalDateTime create;
+    private LocalDateTime created;
 
     @Column(name = "text_content", columnDefinition = "TEXT", nullable = false)
     private String textContent;
@@ -28,6 +28,7 @@ public class Comment {
     private Route route;
 
     public Comment() {
+
     }
 
     public Long getId() {
@@ -46,12 +47,12 @@ public class Comment {
         this.approved = approved;
     }
 
-    public LocalDateTime getCreate() {
-        return create;
+    public LocalDateTime getCreated() {
+        return created;
     }
 
-    public void setCreate(LocalDateTime create) {
-        this.create = create;
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public String getTextContent() {

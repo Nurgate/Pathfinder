@@ -1,11 +1,11 @@
 package bg.softuni.pathfinder.model;
 
+
 import bg.softuni.pathfinder.model.enums.CategoryNames;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "categories")
-
 public class Category {
 
     @Id
@@ -17,9 +17,12 @@ public class Category {
     private CategoryNames name;
 
     @Column(name = "description", columnDefinition = "TEXT")
+//    @Lob
+    // TODO check how to get dynamic column definition for different db sources
     private String description;
 
     public Category() {
+
     }
 
     public Long getId() {

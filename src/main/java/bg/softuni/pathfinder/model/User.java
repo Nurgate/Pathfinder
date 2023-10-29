@@ -12,95 +12,124 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    private Long id;
+
     @Column(name = "username", nullable = false, unique = true)
-        private String username;
+    private String username;
+
     @Column(name = "password", nullable = false)
-        private String password;
+    private String password;
+
     @Column(name = "full_name")
-        private String fullName;
+    private String fullName;
 
     @Column(name = "age")
     private Integer age;
+
     @Column(name = "email", unique = true)
-        private  String email;
+    private String email;
 
-        @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable(
-                name = "users_roles",
-                joinColumns = { @JoinColumn (name = "user_id", referencedColumnName = "id") },
-                inverseJoinColumns = { @JoinColumn (name = "role_id", referencedColumnName = "id")}
-        )
-        private Set<Role> roles;
-        @Enumerated(EnumType.STRING)
-        private Level level;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
+    )
+    private Set<Role> roles;
 
-        public User() {
-            this.roles = new HashSet<>();
-        }
+    @Enumerated(EnumType.STRING)
+    private Level level;
 
-    public Long getId() {
+    public User() {
+        this.roles = new HashSet<>();
+    }
+
+    public Long getId () {
+
         return id;
     }
 
-    public void setId(Long id) {
+    public User setId (Long id) {
+
         this.id = id;
+        return this;
     }
 
-    public String getUsername() {
+    public String getUsername () {
+
         return username;
     }
 
-    public void setUsername(String username) {
+    public User setUsername (String username) {
+
         this.username = username;
+        return this;
     }
 
-    public String getPassword() {
+    public String getPassword () {
+
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword (String password) {
+
         this.password = password;
+        return this;
     }
 
-    public String getFullName() {
+    public String getFullName () {
+
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public User setFullName (String fullName) {
+
         this.fullName = fullName;
+        return this;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public Integer getAge () {
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Role> getRole() {
-        return roles;
-    }
-
-    public void setRole(Set<Role> role) {
-        this.roles = role;
-    }
-
-    public Level getLevel() {
-        return level;
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
-    }
-
-    public Integer getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public User setAge (Integer age) {
+
         this.age = age;
+        return this;
+    }
+
+    public String getEmail () {
+
+        return email;
+    }
+
+    public User setEmail (String email) {
+
+        this.email = email;
+        return this;
+    }
+
+    public Set<Role> getRoles () {
+
+        return roles;
+    }
+
+    public User setRoles (Set<Role> roles) {
+
+        this.roles = roles;
+        return this;
+    }
+
+    public Level getLevel () {
+
+        return level;
+    }
+
+    public User setLevel (Level level) {
+
+        this.level = level;
+        return this;
     }
 }
 
