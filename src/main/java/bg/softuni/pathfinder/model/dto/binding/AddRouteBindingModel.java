@@ -5,6 +5,7 @@ import bg.softuni.pathfinder.model.enums.CategoryNames;
 import bg.softuni.pathfinder.model.enums.Level;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -14,6 +15,7 @@ public class AddRouteBindingModel {
     private String name;
     @Size(min = 5, message = "Description length must be more than 5 characters")
     private String description;
+    private MultipartFile gpxCoordinates;
     private Level level;
     private String videoUrl;
     private User author;
@@ -47,6 +49,15 @@ public class AddRouteBindingModel {
 
     public AddRouteBindingModel setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public MultipartFile getGpxCoordinates() {
+        return gpxCoordinates;
+    }
+
+    public AddRouteBindingModel setGpxCoordinates(MultipartFile gpxCoordinates) {
+        this.gpxCoordinates = gpxCoordinates;
         return this;
     }
 

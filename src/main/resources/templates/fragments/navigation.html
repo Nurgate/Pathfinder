@@ -16,7 +16,7 @@
                 <a th:href="@{/users/login}">Login</a>
             </li>
             <li th:unless="${@loggedUser.isLogged}">
-                <a th:href="@{/users/register}">Register</a>
+                <a th:href="@{/users/register}">Register </a>
             </li>
             <li>
                 <a th:href="@{/about}">About</a>
@@ -31,16 +31,10 @@
                 <a href="/">Admin</a>
             </li>
             <li th:if="${@loggedUser.isLogged}">
-                <form th:action="@{users/logout}" th:method="POST">
+                <form th:action="@{/users/logout}" th:method="POST">
                     <input class="mybtn" type="submit" value="Logout" />
                 </form>
-
-<!--                <a th:href="@{/users/logout}">Logout</a>-->
             </li>
-            <!--                <li>-->
-            <!--                    <th:block-->
-            <!--                            th:text="${@loggedUser.username} == null ? 'no user' : ${@loggedUser.username}"></th:block>-->
-            <!--                </li>-->
         </ul>
     </nav>
 </header>
