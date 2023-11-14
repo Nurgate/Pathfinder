@@ -35,8 +35,7 @@ public class FileValidator implements ConstraintValidator<FileAnnotation, Multip
     }
 
     private String getErrorMsg(MultipartFile file) {
-        //size
-        //content type
+
         if  (file.isEmpty()) {
             return "File must be provided";
         }
@@ -45,9 +44,9 @@ public class FileValidator implements ConstraintValidator<FileAnnotation, Multip
             return "Exceeded file size. Max size: " + size;
         }
 
-        if (contentTypes.contains((file.getContentType()))) {
+        if (!contentTypes.contains(file.getContentType())) {
             return "Invalid file type extension. Supported files: " + String.join(", ", contentTypes);
         }
-        return null;
+        return "";
     }
 }
