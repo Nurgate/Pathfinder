@@ -29,10 +29,9 @@ import java.util.regex.Pattern;
 public class RouteServiceImpl implements RouteService {
 
     private static final String BASE_GPX_COORDINATES_PATH = ".\\src\\main\\resources\\coordinates\\";
-    private static final String BASE_IMAGES_PATH = ".\\src\\main\\resources\\images\\";
+    private static final String BASE_IMAGES_PATH = ".\\src\\main\\resources\\static\\images\\";
     private final RouteRepository routeRepository;
     private final ModelMapper modelMapper;
-
     private final LoggedUser loggedUser;
 
     public RouteServiceImpl(RouteRepository routeRepository,
@@ -70,7 +69,7 @@ public class RouteServiceImpl implements RouteService {
         }
 
 
-        String regex = "^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube(-nocookie)?\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$\n";
+        String regex = "http(?:s?):\\/\\/(?:www\\.)?youtu(?:be\\.com\\/watch\\?v=|\\.be\\/)([\\w\\-\\_]*)(&(amp;)?\u200C\u200B[\\w\\?\u200C\u200B=]*)?";
         Pattern compile = Pattern.compile(regex);
 
         Matcher matcher = compile.matcher(addRouteBindingModel.getVideoUrl());
