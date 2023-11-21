@@ -9,6 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentViewModel {
 
+    private long id;
     private String content;
     private String authorName;
+    private Boolean approved;
+
 }

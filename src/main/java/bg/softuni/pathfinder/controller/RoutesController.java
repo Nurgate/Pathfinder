@@ -98,15 +98,17 @@ public class RoutesController {
         List<RouteCategoryViewModel> routes = routeService.getAllByCategory(categoryName);
 
         String view =
-        switch (categoryName) {
-            case PEDESTRIAN -> "pedestrian";
-            case BICYCLE -> "bicycle";
-            case MOTORCYCLE -> "motorcycle";
-            case CAR -> "car";
+                switch (categoryName) {
+                    case PEDESTRIAN -> "pedestrian";
+                    case MOTORCYCLE -> "motorcycle";
+                    case CAR -> "car";
+                    case BICYCLE -> "bicycle";
+                };
 
-        };
         ModelAndView modelAndView = new ModelAndView(view);
+
         modelAndView.addObject("routes", routes);
+
         return modelAndView;
     }
 }

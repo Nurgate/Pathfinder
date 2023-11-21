@@ -17,12 +17,10 @@ public class AddRouteBindingModel {
     private String name;
     @Size(min = 5, message = "Description length must be more than 5 characters")
     private String description;
-
     @FileAnnotation(contentTypes = "text/xml")
     private MultipartFile gpxCoordinates;
     private Level level;
-
-    @Pattern(regexp = "https:\\/\\/www\\.youtube\\.com\\/watch\\?v=.*", message = "Invalid YouTube URL")
+    @Pattern(regexp = "https:\\/\\/www\\.youtube\\.com\\/watch\\?v=.*", message = "Invalid youtube url provided")
     private String videoUrl;
     private User author;
     private Set<CategoryNames> categories;

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CreateCommentBindingModel {
-    
+
     private long routeId;
     private String textContent;
 }

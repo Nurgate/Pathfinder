@@ -10,7 +10,9 @@ import bg.softuni.pathfinder.model.dto.view.RouteViewModel;
 import bg.softuni.pathfinder.model.enums.CategoryNames;
 import bg.softuni.pathfinder.repository.RouteRepository;
 import bg.softuni.pathfinder.service.RouteService;
+import bg.softuni.pathfinder.service.helpers.PictureHelperService;
 import bg.softuni.pathfinder.service.session.LoggedUser;
+import io.jenetics.jpx.GPX;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,26 +21,28 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class RouteServiceImpl implements RouteService {
 
-    private static final String BASE_GPX_COORDINATES_PATH = ".\\src\\main\\resources\\coordinates\\";
-    private static final String BASE_IMAGES_PATH = ".\\src\\main\\resources\\static\\images\\";
+    private static final String BASE_GPX_COORDINATES_PATH = ".//src//main//resources//coordinates//";
+    private static final String BASE_IMAGES_PATH = ".//src//main//resources//static//images//";
     private final RouteRepository routeRepository;
+    private final PictureHelperService pictureHelperService;
     private final ModelMapper modelMapper;
     private final LoggedUser loggedUser;
 
     public RouteServiceImpl(RouteRepository routeRepository,
-                            ModelMapper modelMapper, LoggedUser loggedUser) {
+                            PictureHelperService pictureHelperService, ModelMapper modelMapper,
+                            LoggedUser user) {
         this.routeRepository = routeRepository;
+        this.pictureHelperService = pictureHelperService;
         this.modelMapper = modelMapper;
-        this.loggedUser = loggedUser;
+        this.loggedUser = user;
     }
 
     @Override
@@ -50,43 +54,54 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public void add(AddRouteBindingModel addRouteBindingModel) {
-
         Route route = modelMapper.map(addRouteBindingModel, Route.class);
 
         String filePath = getFilePath(route.getName());
+        boolean isUploaded = uploadGpxCoordinates(addRouteBindingModel.getGpxCoordinates(), filePath);
 
+        if (isUploaded) {
+            route.setGpxCoordinates(filePath);
+        }
 
+        routeRepository.save(route);
+    }
+
+    private boolean uploadGpxCoordinates(MultipartFile file, String filePath) {
         try {
             File newFile = new File(BASE_GPX_COORDINATES_PATH + filePath);
             newFile.getParentFile().mkdirs();
             newFile.createNewFile();
 
             OutputStream outputStream = new FileOutputStream(newFile);
-            outputStream.write(addRouteBindingModel.getGpxCoordinates().getBytes());
-            route.setGpxCoordinates(filePath);
+            outputStream.write(file.getBytes());
+//            outputStream.close();
+
+            return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-
-        String regex = "http(?:s?):\\/\\/(?:www\\.)?youtu(?:be\\.com\\/watch\\?v=|\\.be\\/)([\\w\\-\\_]*)(&(amp;)?\u200C\u200B[\\w\\?\u200C\u200B=]*)?";
-        Pattern compile = Pattern.compile(regex);
-
-        Matcher matcher = compile.matcher(addRouteBindingModel.getVideoUrl());
-        if (matcher.find()) {
-            String url = matcher.group(1);
-            route.setVideoUrl(url);
-        }
-
-        System.out.println();
-
-        routeRepository.save(route);
+        return false;
     }
+
+    @Override
+    public RouteDetailsViewModel getDetails(Long id) {
+        Route route = routeRepository.findById(id)
+                .orElseThrow(() -> new RouteNotFoundException("Route with id: " + id + " was not found!"));
+
+        return modelMapper.map(route, RouteDetailsViewModel.class);
+    }
+
 
     @Override
     public void uploadPicture(UploadPictureRouteBindingModel uploadPictureRouteBindingModel) {
         MultipartFile pictureFile = uploadPictureRouteBindingModel.getPicture();
-        String picturePath = getPicturePath(pictureFile);
+        boolean isPrimary = uploadPictureRouteBindingModel.getIsPrimary();
+
+        Route route = routeRepository.findById(uploadPictureRouteBindingModel.getId())
+                .orElseThrow(() -> new RouteNotFoundException("Route not found!"));
+
+        String picturePath = getPicturePath(pictureFile, route.getName(), isPrimary);
 
         try {
             File file = new File(BASE_IMAGES_PATH + picturePath);
@@ -96,13 +111,12 @@ public class RouteServiceImpl implements RouteService {
             OutputStream outputStream = new FileOutputStream(file);
             outputStream.write(pictureFile.getBytes());
 
-            Optional<Route> optionalRoute = routeRepository.findById(uploadPictureRouteBindingModel.getId());
-            if (optionalRoute.isPresent()) {
-                Route route = optionalRoute.get();
+            if (isPrimary) {
                 route.setImageUrl(picturePath);
                 routeRepository.save(route);
+            } else {
+                pictureHelperService.create(route, picturePath);
             }
-
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
@@ -110,28 +124,55 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public List<RouteCategoryViewModel> getAllByCategory(CategoryNames categoryName) {
-       List<Route> routes = routeRepository.findAllByCategories_Name(categoryName);
+        List<Route> routes = routeRepository.findAllByCategories_Name(categoryName);
+        List<RouteCategoryViewModel> viewRoutes = routes.stream()
+                .map(route -> modelMapper.map(route, RouteCategoryViewModel.class))
+                .toList();
 
-       List<RouteCategoryViewModel> viewRoutes = routes.stream()
-               .map(route -> modelMapper.map(route, RouteCategoryViewModel.class))
-               .toList();
         return viewRoutes;
     }
 
-    private String getPicturePath(MultipartFile pictureFile) {
-        String[] splitPictureName = pictureFile.getOriginalFilename().split("\\.");
-        String ext =  splitPictureName[splitPictureName.length - 1];
+    @Override
+    public List<List<Double>> getCoordinates(Long routeId) {
+        Route route = this.routeRepository.findById(routeId)
+                .orElseThrow(() -> new RouteNotFoundException("Route not found"));
 
-        String pathPattern = "%s\\%s." + ext;
+        try {
+            GPX gpx = GPX.read(Path.of(BASE_GPX_COORDINATES_PATH + route.getGpxCoordinates()));
+
+            return gpx.getTracks().get(0).getSegments().get(0).getPoints().stream()
+                    .map(point -> {
+                        List<Double> coordinates = new ArrayList<>();
+                        coordinates.add(point.getLongitude().doubleValue());
+                        coordinates.add(point.getLatitude().doubleValue());
+                        return coordinates;
+                    })
+                    .toList();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private String getPicturePath(MultipartFile pictureFile, String routeName, boolean isPrimary) {
+        String ext = getFileExtension(pictureFile.getOriginalFilename());
+
+        String pathPattern = "%s\\%s\\%s." + ext;
 
         return String.format(pathPattern,
-                loggedUser.getUsername(),
+                transformRouteName(routeName),
+                isPrimary ? "" : "gallery",
                 UUID.randomUUID());
+    }
+
+    private String getFileExtension(String fileName) {
+        String[] splitPictureName = fileName.split("\\.");
+        return splitPictureName[splitPictureName.length - 1];
     }
 
     private String getFilePath(String routeName) {
         String pathPattern = "%s\\%s_%s.xml";
-        return String.format(pathPattern ,
+        return String.format(pathPattern,
                 loggedUser.getUsername(),
                 transformRouteName(routeName),
                 UUID.randomUUID());
@@ -142,14 +183,5 @@ public class RouteServiceImpl implements RouteService {
                 .replaceAll("\\s+", "_");
     }
 
-    @Override
-    public RouteDetailsViewModel getDetails(Long id) {
-        Route route = routeRepository.findById(id)
-                .orElseThrow(() -> new RouteNotFoundException("Route with id: " + id + " was not found!"));
 
-        RouteDetailsViewModel routeDetailsViewModel = modelMapper.map(route, RouteDetailsViewModel.class);
-        routeDetailsViewModel.setAuthorName(route.getAuthor().getFullName());
-
-        return routeDetailsViewModel;
-    }
 }

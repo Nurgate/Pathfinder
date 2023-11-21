@@ -12,31 +12,34 @@ import java.util.List;
 public class FileValidator implements ConstraintValidator<FileAnnotation, MultipartFile> {
 
     private List<String> contentTypes;
+
     private long size;
+
     @Override
     public void initialize(FileAnnotation constraintAnnotation) {
         this.size = constraintAnnotation.size();
         this.contentTypes = Arrays.stream(constraintAnnotation.contentTypes()).toList();
-
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
         String errorMsg = getErrorMsg(file);
+
         if (!errorMsg.isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(errorMsg)
                     .addConstraintViolation();
+
             return false;
         }
 
         return true;
+
     }
 
     private String getErrorMsg(MultipartFile file) {
-
-        if  (file.isEmpty()) {
+        if (file.isEmpty()) {
             return "File must be provided";
         }
 
@@ -45,8 +48,9 @@ public class FileValidator implements ConstraintValidator<FileAnnotation, Multip
         }
 
         if (!contentTypes.contains(file.getContentType())) {
-            return "Invalid file type extension. Supported files: " + String.join(", ", contentTypes);
+            return "Invalid file extension. Supported files: " + String.join(", ", contentTypes);
         }
+
         return "";
     }
 }

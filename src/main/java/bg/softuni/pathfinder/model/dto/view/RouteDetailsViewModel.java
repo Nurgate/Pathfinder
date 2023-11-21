@@ -1,6 +1,5 @@
 package bg.softuni.pathfinder.model.dto.view;
 
-import bg.softuni.pathfinder.model.Comment;
 import bg.softuni.pathfinder.model.enums.Level;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +21,5 @@ public class RouteDetailsViewModel {
     private String videoUrl;
     private String authorName;
     private List<CommentViewModel> comments;
-
-    // TODO pass coordinates;
+    private List<PictureViewModel> pictures;
 }
