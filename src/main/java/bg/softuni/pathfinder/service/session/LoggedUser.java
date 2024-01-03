@@ -2,12 +2,14 @@ package bg.softuni.pathfinder.service.session;
 
 import bg.softuni.pathfinder.model.Role;
 import bg.softuni.pathfinder.model.enums.UserRoles;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 @Component
 public class LoggedUser {
 
@@ -27,42 +29,40 @@ public class LoggedUser {
                 .setLogged(false);
     }
 
-    public String getUsername () {
-
-        return username;
-    }
-
     public LoggedUser setUsername (String username) {
 
         this.username = username;
         return this;
     }
 
-    public Set<Role> getRoles () {
-
-        return roles;
-    }
 
     public LoggedUser setRoles (Set<Role> roles) {
-
         this.roles = roles;
         return this;
     }
 
     public boolean isLogged () {
-
         return isLogged;
     }
 
     public LoggedUser setLogged (boolean logged) {
-
         isLogged = logged;
         return this;
     }
 
     public boolean isAdmin () {
-
+        return hasRole(UserRoles.ADMIN);
+    }
+    public boolean isModerator () {
+        return hasRole(UserRoles.MODERATOR);
+    }
+    public boolean isOnlyUser () {
         return this.roles.stream()
-                .anyMatch(role -> role.getName().equals(UserRoles.ADMIN));
+                .allMatch(role -> role.getName().equals(UserRoles.USER));
+    }
+
+    private boolean hasRole (UserRoles userRoles) {
+        return this.roles.stream()
+                .anyMatch(role -> role.getName().equals(userRoles));
     }
 }

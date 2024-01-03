@@ -93,7 +93,10 @@
         <section class="comments">
             <h1>Comments</h1>
             <div th:unless="${#lists.size(route.comments) == 0}" class="comments">
-                <div class="form-group" th:each="comment : ${route.comments}">
+
+                <div th:if="${@loggedUser.isAdmin() or @loggedUser.isModerator()}"
+                     class="form-group"
+                     th:each="comment : ${route.comments}">
                     <h4 th:text="${comment.content}">Leave a comment</h4>
                     <label th:text="${comment.authorName == null ? 'Anonymous' : comment.authorName}">Message</label>
                     <div>
@@ -103,6 +106,15 @@
                         <form th:method="DELETE" th:action="@{/comments/{id}/{routeId}(id=${comment.id}, routeId=${route.id})}">
                             <button class="btn btn-danger" type="submit" th:text="'Delete'"></button>
                         </form>
+                    </div>
+                </div>
+
+                <div th:if="${@loggedUser.isOnlyUser()}"
+                        class="form-group"
+                     th:each="comment : ${route.comments}">
+                    <div th:if="${comment.approved}">
+                        <h4 th:text="${comment.content}">Leave a comment</h4>
+                        <label th:text="${comment.authorName == null ? 'Anonymous' : comment.authorName}">Message</label>
                     </div>
                 </div>
             </div>

@@ -9,4 +9,5 @@ public interface CommentService {
     void approve(Long id);
 
     void delete(Long id);
+
 }

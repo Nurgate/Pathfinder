@@ -4,29 +4,18 @@ import bg.softuni.pathfinder.exceptions.CommentNotFountException;
 import bg.softuni.pathfinder.model.Comment;
 import bg.softuni.pathfinder.model.dto.binding.CreateCommentBindingModel;
 import bg.softuni.pathfinder.repository.CommentRepository;
-import bg.softuni.pathfinder.repository.RouteRepository;
-import bg.softuni.pathfinder.repository.UserRepository;
 import bg.softuni.pathfinder.service.CommentService;
-import bg.softuni.pathfinder.service.session.LoggedUser;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final RouteRepository routeRepository;
-    private final UserRepository userRepository;
-    private final LoggedUser loggedUser;
     private final ModelMapper mapper;
 
-    public CommentServiceImpl(CommentRepository commentRepository, RouteRepository routeRepository, UserRepository userRepository, LoggedUser loggedUser, ModelMapper mapper) {
-        this.commentRepository = commentRepository;
-        this.routeRepository = routeRepository;
-        this.userRepository = userRepository;
-        this.loggedUser = loggedUser;
-        this.mapper = mapper;
-    }
 
     @Override
     public void create(CreateCommentBindingModel createCommentBindingModel) {
@@ -49,4 +38,6 @@ public class CommentServiceImpl implements CommentService {
     public void delete(Long id) {
         commentRepository.deleteById(id);
     }
+
+
 }
