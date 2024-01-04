@@ -18,9 +18,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransferGpxCoordinatesToFiles implements CommandLineRunner {
 
-    private static final String BASE_GPX_COORDINATES_PATH = ".\\src\\main\\resources\\coordinates\\";
+    private static final String BASE_GPX_COORDINATES_PATH = "./src/main/resources/coordinates/";
     @Value("${pathfinder.gpx-coordinates.migrate}")
-    private Boolean shouldMigrate;
+    private boolean shouldMigrate;
     private final RouteRepository routeRepository;
 
     @Override

@@ -33,8 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
 
-    private static final String BASE_GPX_COORDINATES_PATH = ".//src//main//resources//coordinates//";
-    private static final String BASE_IMAGES_PATH = ".//src//main//resources//static//images//";
+    private static final String BASE_GPX_COORDINATES_PATH = ".src/main/resources/coordinates//";
+    private static final String BASE_IMAGES_PATH = ".src/main/resources/static/images//";
     private final RouteRepository routeRepository;
     private final PictureHelperService pictureHelperService;
     private final CommentHelperService commentHelperService;
