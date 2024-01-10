@@ -1,7 +1,6 @@
 package bg.softuni.pathfinder.controller;
 
 import bg.softuni.pathfinder.exceptions.LoginCredentialsException;
-import bg.softuni.pathfinder.model.dto.binding.UserLoginBindingModel;
 import bg.softuni.pathfinder.model.dto.binding.UserRegisterBindingModel;
 import bg.softuni.pathfinder.model.dto.view.UserProfileViewModel;
 import bg.softuni.pathfinder.service.AuthenticationService;
@@ -35,12 +34,6 @@ public class UsersController {
         return new ModelAndView("login");
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(UserLoginBindingModel userLoginBindingModel) {
-
-        authenticationService.login(userLoginBindingModel);
-        return new ModelAndView("redirect:/");
-    }
 
     @ExceptionHandler(LoginCredentialsException.class)
     public ModelAndView handleLoginCredentialsError(LoginCredentialsException e,
@@ -82,13 +75,6 @@ public class UsersController {
         }
 
         return modelAndView;
-    }
-
-    @PostMapping("/logout")
-    public ModelAndView logout() {
-        this.authenticationService.logout();
-
-        return new ModelAndView("redirect:/");
     }
 
     @GetMapping("/profile")

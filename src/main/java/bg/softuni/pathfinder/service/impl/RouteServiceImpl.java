@@ -12,8 +12,8 @@ import bg.softuni.pathfinder.model.enums.CategoryNames;
 import bg.softuni.pathfinder.repository.RouteRepository;
 import bg.softuni.pathfinder.service.RouteService;
 import bg.softuni.pathfinder.service.helpers.CommentHelperService;
+import bg.softuni.pathfinder.service.helpers.LoggedUserHelperService;
 import bg.softuni.pathfinder.service.helpers.PictureHelperService;
-import bg.softuni.pathfinder.service.session.LoggedUser;
 import io.jenetics.jpx.GPX;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -39,7 +39,7 @@ public class RouteServiceImpl implements RouteService {
     private final PictureHelperService pictureHelperService;
     private final CommentHelperService commentHelperService;
     private final ModelMapper modelMapper;
-    private final LoggedUser loggedUser;
+    private final LoggedUserHelperService loggedUserHelperService;
 
     @Override
     public List<RouteViewModel> getAll() {
@@ -181,7 +181,7 @@ public class RouteServiceImpl implements RouteService {
     private String getFilePath(String routeName) {
         String pathPattern = "%s\\%s_%s.xml";
         return String.format(pathPattern,
-                loggedUser.getUsername(),
+                loggedUserHelperService.getUsername(),
                 transformRouteName(routeName),
                 UUID.randomUUID());
     }

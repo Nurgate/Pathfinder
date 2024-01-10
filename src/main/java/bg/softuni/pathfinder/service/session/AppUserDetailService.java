@@ -19,10 +19,14 @@ public class AppUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         return userRepository.findByUsername(username)
-                .map(user -> modelMapper.map(user, UserDetails.class))
+                .map(this::mapToUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("User with name " + username + " was not found!"));
+    }
 
-
-
+    private UserDetails mapToUserDetails(User user) {
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .build();
     }
 }
