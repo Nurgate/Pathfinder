@@ -3,6 +3,7 @@ package bg.softuni.pathfinder.service.impl;
 import bg.softuni.pathfinder.exceptions.CommentNotFountException;
 import bg.softuni.pathfinder.model.Comment;
 import bg.softuni.pathfinder.model.dto.binding.CreateCommentBindingModel;
+import bg.softuni.pathfinder.model.dto.view.CommentViewModel;
 import bg.softuni.pathfinder.repository.CommentRepository;
 import bg.softuni.pathfinder.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,17 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void create(CreateCommentBindingModel createCommentBindingModel) {
         Comment comment = mapper.map(createCommentBindingModel, Comment.class);
+        comment.setId(null);
 
         commentRepository.save(comment);
+    }
+
+    @Override
+    public CommentViewModel createRest(CreateCommentBindingModel createCommentBindingModel) {
+        Comment comment = mapper.map(createCommentBindingModel, Comment.class);
+        comment.setId(null);
+
+        return mapper.map(commentRepository.save(comment), CommentViewModel.class);
     }
 
     @Override
