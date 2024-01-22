@@ -33,8 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
 
-    private static final String BASE_GPX_COORDINATES_PATH = ".src/main/resources/coordinates//";
-    private static final String BASE_IMAGES_PATH = ".src/main/resources/static/images//";
+    private static final String BASE_GPX_COORDINATES_PATH = ".\\src\\main\\resources\\coordinates\\";
+    private static final String BASE_IMAGES_PATH = ".\\src\\main\\resources\\static\\images\\";
     private final RouteRepository routeRepository;
     private final PictureHelperService pictureHelperService;
     private final CommentHelperService commentHelperService;
@@ -70,7 +70,6 @@ public class RouteServiceImpl implements RouteService {
 
             OutputStream outputStream = new FileOutputStream(newFile);
             outputStream.write(file.getBytes());
-//            outputStream.close();
 
             return true;
         } catch (IOException e) {
@@ -152,6 +151,12 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public RouteIndexViewModel getMostCommentedRouteId() {
+        return null;
+    }
+
+
+    @Override
+    public RouteIndexViewModel getMostCommentedRoute() {
         Long routeId = commentHelperService.getMostCommentedRouteId();
 
         if (routeId != null && routeId != 0) {
@@ -159,6 +164,7 @@ public class RouteServiceImpl implements RouteService {
                     .map(route -> modelMapper.map(route, RouteIndexViewModel.class))
                     .orElse(null);
         }
+
         return null;
     }
 

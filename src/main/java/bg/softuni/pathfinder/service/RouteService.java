@@ -25,4 +25,6 @@ public interface RouteService {
     List<List<Double>> getCoordinates(Long routeId);
 
     RouteIndexViewModel getMostCommentedRouteId();
+
+    RouteIndexViewModel getMostCommentedRoute();
 }
