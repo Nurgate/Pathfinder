@@ -17,8 +17,9 @@ spring:
 #    import: vault://
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/pathfinder?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
+    url: "jdbc:mysql://pathfinder.mysql.database.azure.com:3306/pathfinder?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC"
     username: ${db_username}
+
     password: ${db_password}
   sql:
     init:

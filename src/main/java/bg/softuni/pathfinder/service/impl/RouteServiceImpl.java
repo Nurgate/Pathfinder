@@ -33,8 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
 
-    private static final String BASE_GPX_COORDINATES_PATH = ".\\src\\main\\resources\\coordinates\\";
-    private static final String BASE_IMAGES_PATH = ".\\src\\main\\resources\\static\\images\\";
+    private static final String BASE_GPX_COORDINATES_PATH = "./src/main/resources/coordinates/";
+    private static final String BASE_IMAGES_PATH = "./src/main/resources/static/images/";
     private final RouteRepository routeRepository;
     private final PictureHelperService pictureHelperService;
     private final CommentHelperService commentHelperService;
@@ -171,7 +171,7 @@ public class RouteServiceImpl implements RouteService {
     private String getPicturePath(MultipartFile pictureFile, String routeName, boolean isPrimary) {
         String ext = getFileExtension(pictureFile.getOriginalFilename());
 
-        String pathPattern = "%s\\%s\\%s." + ext;
+        String pathPattern = "%s/%s/%s." + ext;
 
         return String.format(pathPattern,
                 transformRouteName(routeName),
@@ -180,12 +180,12 @@ public class RouteServiceImpl implements RouteService {
     }
 
     private String getFileExtension(String fileName) {
-        String[] splitPictureName = fileName.split("\\.");
+        String[] splitPictureName = fileName.split("/.");
         return splitPictureName[splitPictureName.length - 1];
     }
 
     private String getFilePath(String routeName) {
-        String pathPattern = "%s\\%s_%s.xml";
+        String pathPattern = "%s/%s_%s.xml";
         return String.format(pathPattern,
                 loggedUserHelperService.getUsername(),
                 transformRouteName(routeName),
@@ -194,7 +194,7 @@ public class RouteServiceImpl implements RouteService {
 
     private String transformRouteName(String routeName) {
         return routeName.toLowerCase()
-                .replaceAll("\\s+", "_");
+                .replaceAll("/s+", "_");
     }
 
 
